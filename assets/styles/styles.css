@@ -1,15 +1,72 @@
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-  outline: none;
 }
 
 html {
-  height: 100vh;
   font-size: 62.5%;
 }
 
-body {
-  height: 100%;
+:root {
+  --bar-width: 300px; /* This defines how wide the hamgurber bar gonna be; */
+  --bar-height: 50px; /* This defines how height the hamburger bar gonna be;*/
+  --hamburger-gap: 10px; /* This defines how gap hamburger bar gonna be; */
+  --hamburger-margin: 40%; /* This defines the top and left/right distance after defines position property */
+  --hamburger-height: calc(var(--bar-height) * 3 + var(--hamburger-gap) * 2); /* This defines the height of all hamburger. This is calculated as three height bars and two gaps between bars. To do this we use calc() CSS function. It will be used to calculate the --x-width variable  */
+  --foreground: #333;
+  --background: #fffffa;
+  --animation-timing: 200ms ease-in-out; /* This defines the time for transition */
+}
+
+.hamburger-menu {
+  --x-width: calc(var(--hamburger-height) * 1.41421356237); /* Here we used trigonometry to set the width when we click and the bars makes a "X". This calculates how long the bars must to be  */
+  display: flex;
+  flex-flow: column nowrap;
+  gap: var(--hamburger-gap);
+  width: max-content;
+  cursor: pointer;
+  position: absolute;
+  top: var(--hamburger-margin);
+  left: var(--hamburger-margin);
+}
+
+.hamburger-menu::before,
+.hamburger-menu::after,
+.hamburger-menu input {
+  content: '';
+  width: var(--bar-width);
+  height: var(--bar-height);
+  background-color: var(--foreground);
+  border-radius: 9999px;
+  transform-origin: left center;
+  transition:
+    opacity var(--animation-timing), 
+    width var(--animation-timing),
+    rotate var(--animation-timing),
+    translate var(--animation-timing),
+    background-color var(--animation-timing);
+}
+
+.hamburger-menu input {
+  appearance: none;
+  outline: none;
+  pointer-events: none;
+}
+
+.hamburger-menu:has(input:checked)::before {
+  rotate: 45deg;
+  width: var(--x-width); /* We're using the calculation of --x-width here to set the width that bar must to be */
+  translate: 0 calc(var(--bar-height) / -2); /* Here we set the X position to zero and calculate the height bar and divides for minus two so that before pseudoelement up */
+}
+
+.hamburger-menu:has(input:checked)::after {
+  rotate: -45deg;
+  width: var(--x-width); /* We're using the calculation of --x-width here to set the width that bar must to be */
+  translate: 0 calc(var(--bar-height) / 2); /*Here we set the X position to zero and calculate the height bar and divides for two so that before pseudoelement down */
+}
+ 
+.hamburger-menu input:checked {
+  opacity: 0;
+  width: 0;
 }
